@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="boxes.css" />
+
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="jquery-ui.min.js"></script>
+    <script src="jquery.ui.touch-punch.min.js"></script>
+    <script src="jquery.alerts.js"></script>
+    <link href="jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <script src="Stack.js"></script>
+    <script>
+        stack = new Stack();
+
+        function draw() {
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext("2d");
+
+            canvas.width = window.innerWidth - 20;
+            canvas.height = window.innerHeight - 180;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            context.font = "14px sans-serif";
+            context.strokeStyle = "#100";
+
+            if (stack.isEmpty()) {
+                context.fillText("Stack is empty", canvas.width / 2 - 50, 15);
+            } else {
+                x = canvas.width / 2 - 30;
+                y = canvas.height - 30;
+                rectWidth = 60;
+                rectHeight = 30;
+
+                list = stack.list;
+                for (var i = 0; i < list.length; i++) {
+                    value = list[i];
+                    context.fillStyle = "#4CAF50";
+                    context.fillRect(x, y, rectWidth, rectHeight);
+                    context.fillStyle = "#fff"; // Text color
+                    context.fillText(list[i] + "", x + 25, y + 20);
+                    y -= rectHeight;
+                }
+                context.fillText("Top", x - 85, y + rectHeight + 10);
+                drawArrowLine(context, x - 45, y + rectHeight + 10, x, y + rectHeight + 10);
+            }
+
+            context.stroke();
+        }
+
+        function peek() {
+            if (stack.isEmpty()) {
+                jAlert("The stack is empty");
+            } else {
+                jAlert("The top element is " + stack.peek());
+            }
+        }
+
+        function pop() {
+            if (stack.isEmpty()) {
+                jAlert("The stack is empty");
+            } else {
+                stack.pop();
+                draw();
+            }
+        }
+
+        function push() {
+            var value = document.getElementById('value').value.trim();
+            if (value == "") {
+                jAlert("No value entered");
+            } else {
+                stack.push(value);
+            }
+
+            draw();
+        }
+
+        function drawArrowLine(context, x1, y1, x2, y2) {
+           
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+
+            var slope = (y1 - y2) / (x1 - x2);
+
+            var arctan = Math.atan(slope);
+            var set45 = 1.57 / 2;
+
+            if (x1 < x2) {
+                set45 = -1.57 * 1.5;
+            }
+
+            var arrlen = 15;
+
+            context.moveTo(x2, y2);
+            context.lineTo(x2 + Math.cos(arctan + set45) * arrlen, y2 + Math.sin(arctan + set45) * arrlen);
+
+            context.moveTo(x2, y2);
+            context.lineTo(x2 + Math.cos(arctan - set45) * arrlen, y2 + Math.sin(arctan - set45) * arrlen);
+        }
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89940905-27"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments)
+        };
+        gtag('js', new Date());
+        gtag('config', 'UA-89940905-27');
+    </script>
+
+    <script type="text/javascript" src="../logging.js"></script>
+</head>
+<body onload="draw()" onresize="draw()">
+    <div id="container">
+        <div id="stack-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="controls">
+            <p>Usage: Enter a value and click the Push button to push the value into the stack. Click the Pop button to remove the top element from the stack.</p>
+            <div id="input-container">
+                <label for="value">Enter a value:</label>
+                <input type="text" value="" id="value" class="input-field">
+                <button type="button" class="button push-button" onclick="push()">Push</button>
+            </div>
+            <div id="buttons-container">
+                <button type="button" class="button pop-button" onclick="pop()">Pop</button>
+                <button type="button" class="button peek-button" onclick="peek()">Peek</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

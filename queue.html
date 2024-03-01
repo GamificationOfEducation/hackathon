@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Animation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #queue-info {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        #queue-container {
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .queue-element {
+            width: 50px;
+            height: 50px;
+            background-color: #4CAF50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.5s, opacity 0.5s;
+        }
+
+        #enqueue-btn,
+        #dequeue-btn {
+            background-color: #4CAF50;
+            color: #000;
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #enqueue-btn:hover,
+        #dequeue-btn:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <div id="queue-info">Queue Operations: Enqueue and Dequeue</div>
+    <div id="queue-container">
+        <!-- Queue elements will be dynamically added here -->
+    </div>
+    <div>
+        <button id="enqueue-btn" onclick="enqueue()">Enqueue</button>
+        <button id="dequeue-btn" onclick="dequeue()">Dequeue</button>
+    </div>
+
+    <script>
+        const queue = [];
+
+        function updateQueue() {
+            const queueContainer = document.getElementById('queue-container');
+            queueContainer.innerHTML = '';
+
+            for (let i = 0; i < queue.length; i++) {
+                const element = document.createElement('div');
+                element.className = 'queue-element';
+                element.innerText = queue[i];
+                queueContainer.appendChild(element);
+            }
+        }
+
+        async function enqueue() {
+            const value = prompt('Enter a value to enqueue:');
+            if (value !== null) {
+                queue.unshift(value);
+                updateQueue();
+            }
+        }
+
+        async function dequeue() {
+            if (queue.length > 0) {
+                const queueContainer = document.getElementById('queue-container');
+                const dequeuedElement = queueContainer.firstElementChild;
+
+                dequeuedElement.style.transform = 'translateX(100%)';
+                dequeuedElement.style.opacity = '0';
+
+                // Wait for the animation to complete
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                queue.pop();
+                updateQueue();
+            } else {
+                alert('Queue is empty!');
+            }
+        }
+    </script>
+</body>
+</html>
